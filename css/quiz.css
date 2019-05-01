@@ -25,17 +25,45 @@ button:hover{
 }
 
 #myProgress {
-    width: 50%;
+    width: 100%;
     background-color: #ddd;
     margin-bottom: 20px;
 }
 #myBar {
     height: 30px;
-    background-color: #5cb85c;
+    background-color: #0148FE;
     /* width of the bar set initially to 0% to hide it */
-    
     width: 0%;
     /* transition for smooth animation */
-    
     transition: all ease-in-out 0.5s;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+}
+
+#quiz input[type="radio"] {
+    display:none; 
+}
+
+#quiz label {
+    display:inline-block;
+    background-color:#ddd;
+    padding: 10px 20px;
+    font-family:Arial;
+    font-size:16px;
+    border: 2px solid #444;
+    border-radius: 4px;    
+}
+
+#quiz label:hover {
+  background-color: #dfd;
+}
+
+#quiz input[type="radio"]:checked + label { 
+    background-color:#bfb;
+    border-color: #4c4;
 }

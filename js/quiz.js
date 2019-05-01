@@ -9,21 +9,22 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 		for(letter in questions[numQuestion].answers){		
 			// ...add an html radio button
 			answers.push(
-				'<label>'
-					+ '<input type="radio" name="question'+numQuestion+'" value="'+letter+'">'
-					+ questions[numQuestion].answers[letter]
-				+ '</label></br>'
+				'</br>'
+					+ '<input type="radio" id="'+questions[numQuestion].answers[letter]+'" name="question'+numQuestion+'" value="'+letter+'">'
+					+ '<label for="'+questions[numQuestion].answers[letter]+'">'+questions[numQuestion].answers[letter] + '</label>'
+				+ '</br>'
 			);
 		}
 
 		// add this question and its answers to the output
 		output.push(
-			'<div class="question">' + questions[numQuestion].question + '</div>'
+			'<div class="question">' + (numQuestion+1) + ' - ' + questions[numQuestion].question + '</div>'
 			+ '<div class="answers">' + answers.join('') + '</div>'
 		);
 
 		// finally combine our output list into one string of html and put it on the page
 		quizContainer.innerHTML = output.join('');
+		resultsContainer.innerHTML = "Current score: " + correctAnswers + " out of " + questions.length + ".";
 	}
 
 	function showResult(numQuestion, questions, quizContainer, resultsContainer) {
@@ -50,7 +51,18 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 
 	function showEndResult(questions, correctAnswers, resultsContainer) {
 		// show number of correct answers out of total
-		resultsContainer.innerHTML = 'You got ' + correctAnswers + ' out of ' + questions.length + ' answers right.';
+		resultsContainer.innerHTML = 'The End! You got ' + correctAnswers + ' out of ' + questions.length + ' answers right.';
+		tryAgainButton.style.display = "";
+	}
+
+	// reset all numbers and start the quiz again
+	function reset() {
+		noQuestion = 0;
+		correctAnswers = 0;
+		myBarWidth = 0;
+		showQuestion(noQuestion, questions, quizContainer);
+		resultsContainer.innerHTML = "";
+		resetProgress();
 	}
 
 	// functions to update the progress bar
@@ -58,7 +70,6 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 	// add progress to the progress bar
 	function addProgress() {
 	    //increase myBarWidth by 100/questionsNumber
-	    myBar.innerHTML = '<center style="color:white">'+noQuestion+'/'+numberQuestions+'</center>';
 	    myBarWidth += 100 / numberQuestions;
 	    // make sure that width of the progress bar won't be more than 100% & fix for questionsNumber that are not dividers of 100
 	    if (myBarWidth > 100) {
@@ -69,14 +80,8 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 	}
 
 	// deduct progress
-	function deductProgress() {
-	    //decrease myBarWidth by 100/questionsNumber
-	    myBarWidth -= 100 / myQuestions.length;
-	    // make sure that width of the progress bar won't be more than 0% & fix for questionsNumber that are not dividers of 100
-	    if (myBarWidth < 0) {
-	        myBarWidth = 0;
-	    }
-	    // update the width #myBar by changing the css
+	function resetProgress() {
+	    myBarWidth = 0;
 	    document.getElementById("myBar").style.width = myBarWidth + "%";
 	}
 
@@ -84,23 +89,23 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 	var correctAnswers = 0;
 	var numberQuestions = questions.length;
 	var myBarWidth = 0;
-	myBar.innerHTML = '<center style="color:white">'+noQuestion+'/'+numberQuestions+'</center>';
 
 
 	// show the questions
 	showQuestion(noQuestion, questions, quizContainer);
-	nextButton.style.visibility = "hidden"; 
+	nextButton.style.display = "none"; 
+	tryAgainButton.style.display = "none";
 
 	submitButton.onclick = function() {
 		showResult(noQuestion, questions, quizContainer, resultsContainer, correctAnswers);
-		submitButton.style.visibility = "hidden";
+		submitButton.style.display = "none";
 		// condition for end of the quiz
 		if (noQuestion >= questions.length - 1) {
 			showEndResult(questions, correctAnswers, resultsContainer);
-			nextButton.style.visibility = "hidden"; 
+			nextButton.style.display = "none"; 
 		}
 		else {
-			nextButton.style.visibility = "visible";
+			nextButton.style.display = "";
 		}
 		noQuestion++;
 		addProgress();
@@ -108,38 +113,44 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 
 	nextButton.onclick = function() {
 		showQuestion(noQuestion, questions, quizContainer);
-		submitButton.style.visibility = "visible"; 
-		nextButton.style.visibility = "hidden"; 
+		submitButton.style.display = ""; 
+		nextButton.style.display = "none"; 
+	}
+
+	tryAgainButton.onclick = function() {
+		reset();
+		submitButton.style.display = "";
+		tryAgainButton.style.display = "none";
 	}
 }
 
 var myQuestions = [
 	{
-		question: "What is the real name of Doctor Eggman?",
+		question: "Which of the following languages is not Object Oriented?",
 		answers: {
-			a: 'Machigero',
-			b: 'Robotnik',
-			c: 'Machinarium'
-		},
-		correctAnswer: 'b'
-	},
-	{
-		question: "What character was the first Sonic's sidekick?",
-		answers: {
-			a: 'Knuckles',
-			b: 'Amy',
-			c: 'Tails'
+			a: 'Java',
+			b: 'C++',
+			c: 'Haskell'
 		},
 		correctAnswer: 'c'
 	},
 	{
-		question: "In what game does Shadow appear for the first time?",
+		question: "What is the time complexity of the Quicksort algorithm?",
 		answers: {
-			a: 'Sonic Adventure',
-			b: 'Sonic Adventure 2',
-			c: 'Sonic Heroes'
+			a: 'O(nLogn)',
+			b: 'O(n^2)',
+			c: 'O(Logn)'
 		},
-		correctAnswer: 'b'
+		correctAnswer: 'a'
+	},
+	{
+		question: "Which of these languages is statically typed?",
+		answers: {
+			a: 'Python',
+			b: 'JavaScript',
+			c: 'Java'
+		},
+		correctAnswer: 'c'
 	}
 ];
 
@@ -147,6 +158,7 @@ var quizContainer = document.getElementById('quiz');
 var resultsContainer = document.getElementById('results');
 var submitButton = document.getElementById('submit');
 var nextButton = document.getElementById('next');
+var tryAgainButton = document.getElementById('tryagain')
 var questionProgress = document.getElementById('questionProgress');
 
 generateQuiz(myQuestions, quizContainer, resultsContainer, submitButton, nextButton, questionProgress);

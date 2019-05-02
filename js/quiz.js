@@ -47,6 +47,8 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 			// color the answers red
 			answerContainers[0].style.color = 'red';
 		}
+		resultsContainer.innerHTML = "Current score: " + correctAnswers + " out of " + questions.length + ".";
+
 	}
 
 	function showEndResult(questions, correctAnswers, resultsContainer) {
@@ -62,6 +64,7 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton, 
 		myBarWidth = 0;
 		showQuestion(noQuestion, questions, quizContainer);
 		resultsContainer.innerHTML = "";
+		resultsContainer.innerHTML = "Current score: " + correctAnswers + " out of " + questions.length + ".";
 		resetProgress();
 	}
 
@@ -151,6 +154,24 @@ var myQuestions = [
 			c: 'Java'
 		},
 		correctAnswer: 'c'
+	},
+	{
+		question: "Queue data structure works on",
+		answers: {
+			a: 'LIFO',
+			b: 'FIFO',
+			c: 'FILO'
+		},
+		correctAnswer: 'b'
+	},
+	{
+		question: "Which of the following algorithm does not divide the list?",
+		answers: {
+			a: 'Linear search',
+			b: 'Binary search',
+			c: 'Merge sort'
+		},
+		correctAnswer: 'a'
 	}
 ];
 
